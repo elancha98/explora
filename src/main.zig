@@ -3,7 +3,7 @@ const c = @import("c.zig");
 const window = @import("render/window.zig");
 
 const config = @import("config");
-const Renderer = if (config.opengl) @import("render/renderer_opengl.zig") else @import("render/renderer_vulkan.zig");
+const Renderer = @import("render/renderer_vulkan.zig");
 const math = @import("math.zig");
 const Parser = @import("vm/parse.zig");
 const vm = @import("vm/vm.zig");
