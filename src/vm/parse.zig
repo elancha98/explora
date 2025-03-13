@@ -8,10 +8,10 @@ pub fn leb128Result(comptime T: type) type {
 
 pub fn leb128Decode(comptime T: type, stream: anytype) !leb128Result(T) {
     switch (@typeInfo(T)) {
-        .Int => {},
+        .int => {},
         else => @compileError("LEB128 integer decoding only support integers, but got " ++ @typeName(T)),
     }
-    if (@typeInfo(T).Int.bits != 32 and @typeInfo(T).Int.bits != 64) {
+    if (@typeInfo(T).int.bits != 32 and @typeInfo(T).int.bits != 64) {
         @compileError("LEB128 integer decoding only supports 32 or 64 bits integers but got " ++ std.fmt.comptimePrint("{d} bits", .{@typeInfo(T).int.bits}));
     }
 
@@ -28,9 +28,11 @@ pub fn leb128Decode(comptime T: type, stream: anytype) !leb128Result(T) {
             break;
         }
         shift += 7;
-    } else |err| { return err; }
+    } else |err| {
+        return err;
+    }
 
-    if (@typeInfo(T).Int.signedness == .signed) {
+    if (@typeInfo(T).int.signedness == .signed) {
         const size = @sizeOf(T) * 8;
         if (shift < size and (byte & 0x40) != 0) {
             result |= (~@as(T, 0) << shift);
